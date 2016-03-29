@@ -1,8 +1,9 @@
-﻿Build started 22.03.2016 22:54:47.
+﻿Build started 30.03.2016 0:23:50.
      1>Project "C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\NewTrainingFramework\NewTrainingFramework.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\VS15\VC\bin\CL.exe /c /I"C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"Debug\NewTrainingFramework.pch" /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt NewTrainingFramework.cpp
          NewTrainingFramework.cpp
+     1>c:\users\aganurych\desktop\gameloft [ hw ]\домашняя работа\trainingframework\newtrainingframework\newtrainingframework\newtrainingframework.cpp(83): warning C4305: '+=': truncation from 'double' to 'float'
        Link:
          D:\VS15\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\\BIN\NewTrainingFramework.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\\Lib" libEGL.lib libGLESv2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\\BIN\NewTrainingFramework.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\\BIN\NewTrainingFramework.lib" /MACHINE:X86 /SAFESEH Debug\NewTrainingFramework.obj
          Debug\Shaders.obj
@@ -13,4 +14,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.96
+Time Elapsed 00:00:00.71

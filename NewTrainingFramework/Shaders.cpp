@@ -19,8 +19,10 @@ int Shaders::Init(char * fileVertexShader, char * fileFragmentShader)
 	program = esLoadProgram(vertexShader, fragmentShader);
 
 	//finding location of uniforms / attributes
-	positionAttribute = glGetAttribLocation(program, "a_posL");
+	positionAttribute = glGetAttribLocation( program, "a_posL" );
 	m_colorAttribute = glGetAttribLocation( program, "a_color" );
+
+	m_matrixTransformKey = glGetUniformLocation( program, "u_matT" );
 
 	return 0;
 }

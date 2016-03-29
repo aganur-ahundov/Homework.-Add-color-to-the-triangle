@@ -11,22 +11,28 @@
 
 GLuint vboId;
 Shaders myShaders;
+Matrix matrix;
+float m_time;
+
 
 int Init ( ESContext *esContext )
 {
 	glClearColor ( 0.0f, 0.0f, 0.0f, 0.0f );
 
+	matrix.SetIdentity();
+
 	//triangle data (heap)
 	Vertex verticesData[3];
 
-	verticesData[0].pos.x =  0.0f;  verticesData[0].pos.y =  0.5f;  verticesData[0].pos.z =  0.0f;
-	verticesData[1].pos.x = -0.5f;  verticesData[1].pos.y = -0.5f;  verticesData[1].pos.z =  0.0f;
-	verticesData[2].pos.x =  0.5f;  verticesData[2].pos.y = -0.5f;  verticesData[2].pos.z =  0.0f;
+	verticesData[0].pos.x =  0.0f;  verticesData[0].pos.y =  0.5f;  verticesData[0].pos.z = 0.0f;
+	verticesData[1].pos.x = -0.5f;  verticesData[1].pos.y = -0.5f;  verticesData[1].pos.z = 0.0f;
+	verticesData[2].pos.x =  0.5f;  verticesData[2].pos.y = -0.5f;  verticesData[2].pos.z = 0.0f;
 
 	//triangle colors
 	verticesData[0].m_color.x = 0.0f;  verticesData[0].m_color.y = 1.0f;  verticesData[0].m_color.z = 0.0f;
 	verticesData[1].m_color.x = 1.0f;  verticesData[1].m_color.y = 0.0f;  verticesData[1].m_color.z = 0.0f;
 	verticesData[2].m_color.x = 0.0f;  verticesData[2].m_color.y = 0.0f;  verticesData[2].m_color.z = 1.0f;
+
 
 	//buffer object
 	glGenBuffers(1, &vboId); //buffer object name generation
@@ -39,9 +45,12 @@ int Init ( ESContext *esContext )
 
 }
 
+
 void Draw(ESContext *esContext)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	glUniformMatrix4fv( myShaders.m_matrixTransformKey, 1, false, ( GLfloat * ) &matrix );
 
 	glUseProgram(myShaders.program);
 
@@ -63,7 +72,7 @@ void Draw(ESContext *esContext)
 	}
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
-
+	
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	eglSwapBuffers ( esContext->eglDisplay, esContext->eglSurface );
@@ -71,7 +80,8 @@ void Draw(ESContext *esContext)
 
 void Update ( ESContext *esContext, float deltaTime )
 {
-
+	m_time += 0.0015;
+	matrix.SetRotationZ( m_time );
 }
 
 void Key ( ESContext *esContext, unsigned char key, bool bIsPressed)
