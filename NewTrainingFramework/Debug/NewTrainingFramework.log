@@ -1,17 +1,19 @@
-﻿Build started 30.03.2016 0:23:50.
-     1>Project "C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\NewTrainingFramework\NewTrainingFramework.vcxproj" on node 2 (Build target(s)).
+﻿Build started 01.04.2016 1:35:48.
+     1>Project "C:\Users\Aganurych\Desktop\Gameloft\Gameloft [ hw ]\Homework\TrainingFramework\NewTrainingFramework\NewTrainingFramework\NewTrainingFramework.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         D:\VS15\VC\bin\CL.exe /c /I"C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"Debug\NewTrainingFramework.pch" /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt NewTrainingFramework.cpp
+         D:\VS15\VC\bin\CL.exe /c /I"C:\Users\Aganurych\Desktop\Gameloft\Gameloft [ hw ]\Homework\TrainingFramework\NewTrainingFramework\\Include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Yu"stdafx.h" /Fp"Debug\NewTrainingFramework.pch" /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt NewTrainingFramework.cpp
          NewTrainingFramework.cpp
-     1>c:\users\aganurych\desktop\gameloft [ hw ]\домашняя работа\trainingframework\newtrainingframework\newtrainingframework\newtrainingframework.cpp(83): warning C4305: '+=': truncation from 'double' to 'float'
+     1>c:\users\aganurych\desktop\gameloft\gameloft [ hw ]\homework\trainingframework\newtrainingframework\newtrainingframework\newtrainingframework.cpp(49): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+         c:\program files (x86)\windows kits\10\include\10.0.10150.0\ucrt\stdio.h(205): note: see declaration of 'fopen'
+     1>c:\users\aganurych\desktop\gameloft\gameloft [ hw ]\homework\trainingframework\newtrainingframework\newtrainingframework\newtrainingframework.cpp(65): warning C4477: 'fscanf_s' : format string '%d' requires an argument of type 'int *', but variadic argument 1 has type 'const int *'
        Link:
-         D:\VS15\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\\BIN\NewTrainingFramework.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\\Lib" libEGL.lib libGLESv2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\\BIN\NewTrainingFramework.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\\BIN\NewTrainingFramework.lib" /MACHINE:X86 /SAFESEH Debug\NewTrainingFramework.obj
+         D:\VS15\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Aganurych\Desktop\Gameloft\Gameloft [ hw ]\Homework\TrainingFramework\NewTrainingFramework\\BIN\NewTrainingFramework.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Users\Aganurych\Desktop\Gameloft\Gameloft [ hw ]\Homework\TrainingFramework\NewTrainingFramework\\Lib" libEGL.lib libGLESv2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\Aganurych\Desktop\Gameloft\Gameloft [ hw ]\Homework\TrainingFramework\NewTrainingFramework\\BIN\NewTrainingFramework.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Aganurych\Desktop\Gameloft\Gameloft [ hw ]\Homework\TrainingFramework\NewTrainingFramework\\BIN\NewTrainingFramework.lib" /MACHINE:X86 /SAFESEH Debug\NewTrainingFramework.obj
          Debug\Shaders.obj
          Debug\stdafx.obj
-         "C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\Debug\Utilities.lib"
-         NewTrainingFramework.vcxproj -> C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\\BIN\NewTrainingFramework.exe
-     1>Done Building Project "C:\Users\Aganurych\Desktop\Gameloft [ hw ]\Домашняя работа\TrainingFramework\NewTrainingFramework\NewTrainingFramework\NewTrainingFramework.vcxproj" (Build target(s)).
+         "C:\Users\Aganurych\Desktop\Gameloft\Gameloft [ hw ]\Homework\TrainingFramework\NewTrainingFramework\Debug\Utilities.lib"
+         NewTrainingFramework.vcxproj -> C:\Users\Aganurych\Desktop\Gameloft\Gameloft [ hw ]\Homework\TrainingFramework\NewTrainingFramework\\BIN\NewTrainingFramework.exe
+     1>Done Building Project "C:\Users\Aganurych\Desktop\Gameloft\Gameloft [ hw ]\Homework\TrainingFramework\NewTrainingFramework\NewTrainingFramework\NewTrainingFramework.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.71
+Time Elapsed 00:00:01.28

@@ -56,5 +56,8 @@
       <Filter>Resources\Shaders</Filter>
     </None>
     <None Include="..\..\Readme.doc" />
+    <None Include="..\Resources\Models\bus.nfg">
+      <Filter>Resources</Filter>
+    </None>
   </ItemGroup>
 </Project>
