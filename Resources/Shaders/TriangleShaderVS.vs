@@ -9,7 +9,7 @@ uniform mat4 u_matT;
 void main()
 {
 	vec4 posL = vec4(a_posL, 1.0);
-	gl_Position = u_matT * vec4( a_posL, 1.0 );
+	gl_Position = vec4( a_posL, 1.0 );
 
 	v_color = a_color;
 }

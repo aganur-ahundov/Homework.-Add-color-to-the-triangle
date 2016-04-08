@@ -8,7 +8,7 @@
 #include "Globals.h"
 #include <conio.h>
 
-#include <fstream>
+//#include <fstream>
 #include <cassert>
 
 GLuint vboId;
@@ -18,7 +18,7 @@ GLuint hVertexBuffer;
 FILE * pFile;
 float m_time;
 
-const int nIndexes = 1902;
+int nIndexes;
 
 Shaders myShaders;
 //Matrix matrix;
@@ -27,63 +27,52 @@ Shaders myShaders;
 
 int Init ( ESContext *esContext )
 {
-	glEnable( GL_DEPTH_TEST );
-
 	glClearColor ( 0.0f, 0.0f, 0.0f, 0.0f );
+	glEnable(GL_DEPTH_TEST);
 
-	//matrix.SetIdentity();
-
-	//triangle data (heap)
-	//Vertex verticesData[3];
-
-	//verticesData[0].pos.x =  0.0f;  verticesData[0].pos.y =  0.5f;  verticesData[0].pos.z = 0.0f;
-	//verticesData[1].pos.x = -0.5f;  verticesData[1].pos.y = -0.5f;  verticesData[1].pos.z = 0.0f;
-	//verticesData[2].pos.x =  0.5f;  verticesData[2].pos.y = -0.5f;  verticesData[2].pos.z = 0.0f;
-
-	////triangle colors
-	//verticesData[0].m_color.x = 0.0f;  verticesData[0].m_color.y = 1.0f;  verticesData[0].m_color.z = 0.0f;
-	//verticesData[1].m_color.x = 1.0f;  verticesData[1].m_color.y = 0.0f;  verticesData[1].m_color.z = 0.0f;
-	//verticesData[2].m_color.x = 0.0f;  verticesData[2].m_color.y = 0.0f;  verticesData[2].m_color.z = 1.0f;
-
-
-	pFile = fopen("C:/Users/Aganurych/Desktop/Gameloft/Gameloft [ hw ]/Homework/TrainingFramework/NewTrainingFramework/Resources/Models/bus.nfg", "r");
+	fopen_s(&pFile ,"C:/Users/Aganurych/Desktop/Gameloft/Gameloft [ hw ]/Homework/TrainingFramework/NewTrainingFramework/Resources/Models/bus.nfg", "r");
 	assert( pFile );
 
-	int nVertexs = 0;
 
+	int nVertexs = 0;
 	fscanf_s( pFile, "NrVertices: %d", &nVertexs );
 	assert( nVertexs == 683 );
 
 
-	Vertex * verticesData = new Vertex[ nVertexs ];
 	const char form[] = " %*d. pos:[%f, %f, %f]; norm:[%*f, %*f, %*f]; binorm:[%*f, %*f, %*f]; tgt:[%*f, %*f, %*f]; uv:[%f,%f];";
 
-	for ( int i = 0; i < nVertexs; i++ )
-		fscanf_s( pFile, form, &verticesData[i].pos.x, &verticesData[i].pos.y, &verticesData[i].pos.z, &verticesData[i].m_uv.x, &verticesData[i].m_uv.y );
-		
+	Vertex * verticesData = new Vertex[ nVertexs ];
+	for (int i = 0; i < nVertexs; i++)
+	{
+		fscanf(pFile, form, &verticesData[i].pos.x, &verticesData[i].pos.y, &verticesData[i].pos.z, &verticesData[i].m_uv.x, &verticesData[i].m_uv.y);
+		double test = verticesData[i].pos.x;
 
-	fscanf_s( pFile, "NrIndeces: %d", &nIndexes );
-		assert( nIndexes == 1902 );
-
-	float * indexes = new float [ nIndexes ];
-	
-	const char formForVector3[] = "%*d.%d,%d,%d";
-
-	//считыват мусор
-	for ( int i = 0; i < nIndexes; i+= 3 )
-		fscanf_s(pFile, formForVector3, &indexes[i], &indexes[i + 1], &indexes[i + 2]);
-		
+		assert(test == verticesData[i].pos.x);
+	}
 
 	//buffer object
-	//glGenBuffers(1, &vboId); //buffer object name generation
-	//glBindBuffer(GL_ARRAY_BUFFER, vboId); //buffer object binding
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(verticesData), &verticesData, GL_STATIC_DRAW); //creation and initializion of buffer onject storage
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glGenBuffers(1, &hVertexBuffer); //buffer object name generation
-	glBindBuffer(GL_ARRAY_BUFFER, hVertexBuffer); //buffer object binding
-	glBufferData(GL_ARRAY_BUFFER, sizeof(verticesData), &verticesData, GL_STATIC_DRAW); //creation and initializion of buffer onject storage
+	glGenBuffers(1, &vboId); //buffer object name generation
+	glBindBuffer(GL_ARRAY_BUFFER, vboId); //buffer object binding
+	glBufferData(GL_ARRAY_BUFFER, sizeof(*verticesData) * nVertexs, verticesData, GL_STATIC_DRAW); //creation and initializion of buffer onject storage
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	delete[] verticesData;
+
+
+
+
+
+	fscanf_s( pFile, "%*s %d", &nIndexes );
+		assert( nIndexes == 1902 );
+
+	unsigned short * indexes = new unsigned short [ nIndexes ];
+	const char formForVector3[] = "%*d. %hd, %hd, %hd";
+
+	//не считывает данные
+	for (int i = 0; i < nIndexes; i += 3)
+	{
+		fscanf_s( pFile, formForVector3, &indexes[i], &indexes[i + 1], &indexes[i + 2] );
+	}
 
 
 	//index buffer
@@ -91,7 +80,9 @@ int Init ( ESContext *esContext )
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, hIndexBuffer );
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( unsigned short ) * nIndexes, indexes, GL_STATIC_DRAW );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
-
+	
+	delete[] indexes;
+	fclose(pFile);
 	//creation of shaders and program 
 	return myShaders.Init("../Resources/Shaders/TriangleShaderVS.vs", "../Resources/Shaders/TriangleShaderFS.fs");
 
@@ -113,37 +104,38 @@ void Draw(ESContext *esContext)
 
 	GLfloat *ptr = (GLfloat *)0;
 
-	//if (myShaders.positionAttribute != -1) //attribute passing to shader, for uniforms use glUniform1f(time, deltaT); glUniformMatrix4fv( m_pShader->matrixWVP, 1, false, (GLfloat *)&rotationMat );
-	//{
-	//	glEnableVertexAttribArray(myShaders.positionAttribute);
-	//	glVertexAttribPointer(myShaders.positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-	//}
-
-	//if (myShaders.m_colorAttribute != -1)
-	//{
-	//	glEnableVertexAttribArray(myShaders.m_colorAttribute);
-	//	glVertexAttribPointer( myShaders.m_colorAttribute, 3, GL_FLOAT, 
-	//		GL_FALSE, sizeof( Vertex ), ptr+3 );
-	//}
-
-	//glDrawArrays(GL_TRIANGLES, 0, 3);
-	
 	if (myShaders.positionAttribute != -1) //attribute passing to shader, for uniforms use glUniform1f(time, deltaT); glUniformMatrix4fv( m_pShader->matrixWVP, 1, false, (GLfloat *)&rotationMat );
 	{
 		glEnableVertexAttribArray(myShaders.positionAttribute);
-		glVertexAttribPointer( myShaders.positionAttribute, 683, GL_UNSIGNED_SHORT, GL_FALSE, sizeof( Vertex ), 0 );
+		glVertexAttribPointer(myShaders.positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 	}
 
 	if (myShaders.m_colorAttribute != -1)
 	{
-		glEnableVertexAttribArray( myShaders.m_colorAttribute );
+		glEnableVertexAttribArray(myShaders.m_colorAttribute);
 		glVertexAttribPointer( myShaders.m_colorAttribute, 3, GL_FLOAT, 
 			GL_FALSE, sizeof( Vertex ), ptr+3 );
 	}
 
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
+	
+	//if (myShaders.positionAttribute != -1) //attribute passing to shader, for uniforms use glUniform1f(time, deltaT); glUniformMatrix4fv( m_pShader->matrixWVP, 1, false, (GLfloat *)&rotationMat );
+	//{
+	//	glEnableVertexAttribArray(myShaders.positionAttribute);
+	//	glVertexAttribPointer( myShaders.positionAttribute, 683, GL_UNSIGNED_SHORT, GL_FALSE, sizeof( Vertex ), 0 );
+	//}
+
+	/*if (myShaders.m_colorAttribute != -1)
+	{
+		glEnableVertexAttribArray( myShaders.m_colorAttribute );
+		glVertexAttribPointer( myShaders.m_colorAttribute, 3, GL_FLOAT, 
+			GL_FALSE, sizeof( Vertex ), ptr+3 );
+	}*/
+
 	glDrawElements( GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, 0 );
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	eglSwapBuffers ( esContext->eglDisplay, esContext->eglSurface );
 }
@@ -162,6 +154,7 @@ void Key ( ESContext *esContext, unsigned char key, bool bIsPressed)
 void CleanUp()
 {
 	glDeleteBuffers(1, &vboId);
+	glDeleteBuffers(1, &hIndexBuffer);
 }
 
 int _tmain(int argc, _TCHAR* argv[])
