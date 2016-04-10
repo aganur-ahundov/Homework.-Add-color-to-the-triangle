@@ -1,16 +1,17 @@
+
 attribute vec3 a_posL;
-attribute vec3 a_color;
+attribute vec2 a_uv;
+uniform float u_WVP;
 
-varying vec3 v_color;
 
-uniform mat4 u_matT;
+varying vec2 v_uv;
+uniform sampler2D u_s_texture;
 
 
 void main()
 {
-	vec4 posL = vec4(a_posL, 1.0);
-	gl_Position = vec4( a_posL, 1.0 );
 
-	v_color = a_color;
+	gl_Position = vec4( a_posL, 1.0 );
+	v_uv = a_uv;
 }
    

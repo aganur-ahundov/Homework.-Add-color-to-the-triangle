@@ -11,9 +11,8 @@ public:
 	char fileFS[260];
 
 	GLint positionAttribute;
-	GLint m_colorAttribute;
-
-	GLint m_matrixTransformKey;	
+	GLint uvAttrib;
+	GLint textureUniform;
 
 	int Init(char * fileVertexShader, char * fileFragmentShader);
 	~Shaders();

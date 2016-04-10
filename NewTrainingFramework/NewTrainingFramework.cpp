@@ -11,68 +11,100 @@
 //#include <fstream>
 #include <cassert>
 
-GLuint vboId;
 
 GLuint hIndexBuffer;
 GLuint hVertexBuffer;
-FILE * pFile;
-float m_time;
+GLuint hTextureIndex;
 
+FILE * pFile;
 int nIndexes;
+int nVertexs;
 
 Shaders myShaders;
-//Matrix matrix;
 
+
+void initTexture()
+{
+	glGenTextures( 1, &hTextureIndex );
+	glBindTexture( GL_TEXTURE_2D, hTextureIndex );
+
+	int width, height, bpp;
+
+	char *bufferTGA = LoadTGA("../Resources/Textures/Woman1.tga", &width, &height, &bpp);
+	assert(bpp == 24 || bpp == 32);
+
+	if (bpp == 24) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, bufferTGA);
+	}
+	else {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, bufferTGA);
+	}
+
+	delete[] bufferTGA;
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+}
 
 
 int Init ( ESContext *esContext )
 {
+
+	const char form[] = " %*d. pos:[%f, %f, %f]; norm:[%*f, %*f, %*f]; binorm:[%*f, %*f, %*f]; tgt:[%*f, %*f, %*f]; uv:[%f,%f];";
+	const char formForVector3[] = "%*d. %hd, %hd, %hd";
+
+
+	/*-------------------------------------------------------------------------------------*/
+
+
 	glClearColor ( 0.0f, 0.0f, 0.0f, 0.0f );
 	glEnable(GL_DEPTH_TEST);
 
-	fopen_s(&pFile ,"C:/Users/Aganurych/Desktop/Gameloft/Gameloft [ hw ]/Homework/TrainingFramework/NewTrainingFramework/Resources/Models/bus.nfg", "r");
+
+	/*-------------------------------------------------------------------------------------*/
+
+
+	fopen_s(&pFile ,"../Resources/Models/Woman1.nfg", "r");
 	assert( pFile );
 
 
-	int nVertexs = 0;
-	fscanf_s( pFile, "NrVertices: %d", &nVertexs );
-	assert( nVertexs == 683 );
+	fscanf_s(pFile, "NrVertices: %d", &nVertexs);
+	fscanf_s(pFile, "%*s %d", &nIndexes);
 
 
-	const char form[] = " %*d. pos:[%f, %f, %f]; norm:[%*f, %*f, %*f]; binorm:[%*f, %*f, %*f]; tgt:[%*f, %*f, %*f]; uv:[%f,%f];";
+	/*-------------------------------------------------------------------------------------*/
+
 
 	Vertex * verticesData = new Vertex[ nVertexs ];
 	for (int i = 0; i < nVertexs; i++)
-	{
 		fscanf(pFile, form, &verticesData[i].pos.x, &verticesData[i].pos.y, &verticesData[i].pos.z, &verticesData[i].m_uv.x, &verticesData[i].m_uv.y);
-		double test = verticesData[i].pos.x;
 
-		assert(test == verticesData[i].pos.x);
-	}
+	
+	unsigned short * indexes = new unsigned short[nIndexes];
+	for (int i = 0; i < nIndexes; i += 3)
+		fscanf_s(pFile, formForVector3, &indexes[i], &indexes[i + 1], &indexes[i + 2]);
+
+	
+	/*-------------------------------------------------------------------------------------*/
+
+
+	initTexture();
+
+
+	/*-------------------------------------------------------------------------------------*/
+
 
 	//buffer object
-	glGenBuffers(1, &vboId); //buffer object name generation
-	glBindBuffer(GL_ARRAY_BUFFER, vboId); //buffer object binding
-	glBufferData(GL_ARRAY_BUFFER, sizeof(*verticesData) * nVertexs, verticesData, GL_STATIC_DRAW); //creation and initializion of buffer onject storage
+	glGenBuffers(1, &hVertexBuffer); //buffer object name generation
+	glBindBuffer(GL_ARRAY_BUFFER, hVertexBuffer); //buffer object binding
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * nVertexs, verticesData, GL_STATIC_DRAW); //creation and initializion of buffer onject storage
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	delete[] verticesData;
-
-
-
-
-
-	fscanf_s( pFile, "%*s %d", &nIndexes );
-		assert( nIndexes == 1902 );
-
-	unsigned short * indexes = new unsigned short [ nIndexes ];
-	const char formForVector3[] = "%*d. %hd, %hd, %hd";
-
-	//не считывает данные
-	for (int i = 0; i < nIndexes; i += 3)
-	{
-		fscanf_s( pFile, formForVector3, &indexes[i], &indexes[i + 1], &indexes[i + 2] );
-	}
 
 
 	//index buffer
@@ -81,8 +113,18 @@ int Init ( ESContext *esContext )
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, sizeof( unsigned short ) * nIndexes, indexes, GL_STATIC_DRAW );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, 0 );
 	
+
+	
+	/*-------------------------------------------------------------------------------------*/
+
 	delete[] indexes;
+	delete[] verticesData;
+
 	fclose(pFile);
+
+	/*-------------------------------------------------------------------------------------*/
+
+
 	//creation of shaders and program 
 	return myShaders.Init("../Resources/Shaders/TriangleShaderVS.vs", "../Resources/Shaders/TriangleShaderFS.fs");
 
@@ -91,9 +133,9 @@ int Init ( ESContext *esContext )
 
 void Draw(ESContext *esContext)
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	GLint textureUnit = 0;
 
-	//glUniformMatrix4fv( myShaders.m_matrixTransformKey, 1, false, ( GLfloat * ) &matrix );
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	glUseProgram(myShaders.program);
 
@@ -102,35 +144,27 @@ void Draw(ESContext *esContext)
 	glBindBuffer( GL_ARRAY_BUFFER, hVertexBuffer );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, hIndexBuffer );
 
+	glActiveTexture(GL_TEXTURE0 + textureUnit);
+	glBindTexture(GL_TEXTURE_2D, hTextureIndex);
+
 	GLfloat *ptr = (GLfloat *)0;
 
 	if (myShaders.positionAttribute != -1) //attribute passing to shader, for uniforms use glUniform1f(time, deltaT); glUniformMatrix4fv( m_pShader->matrixWVP, 1, false, (GLfloat *)&rotationMat );
 	{
 		glEnableVertexAttribArray(myShaders.positionAttribute);
-		glVertexAttribPointer(myShaders.positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+		glVertexAttribPointer(myShaders.positionAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), ptr);
 	}
 
-	if (myShaders.m_colorAttribute != -1)
+	if (myShaders.uvAttrib != -1)
 	{
-		glEnableVertexAttribArray(myShaders.m_colorAttribute);
-		glVertexAttribPointer( myShaders.m_colorAttribute, 3, GL_FLOAT, 
-			GL_FALSE, sizeof( Vertex ), ptr+3 );
+		glEnableVertexAttribArray(myShaders.uvAttrib);
+		glVertexAttribPointer(myShaders.uvAttrib, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), ptr + 3);
 	}
 
-	//glDrawArrays(GL_TRIANGLES, 0, 3);
-	
-	//if (myShaders.positionAttribute != -1) //attribute passing to shader, for uniforms use glUniform1f(time, deltaT); glUniformMatrix4fv( m_pShader->matrixWVP, 1, false, (GLfloat *)&rotationMat );
-	//{
-	//	glEnableVertexAttribArray(myShaders.positionAttribute);
-	//	glVertexAttribPointer( myShaders.positionAttribute, 683, GL_UNSIGNED_SHORT, GL_FALSE, sizeof( Vertex ), 0 );
-	//}
-
-	/*if (myShaders.m_colorAttribute != -1)
+	if (myShaders.textureUniform != -1)
 	{
-		glEnableVertexAttribArray( myShaders.m_colorAttribute );
-		glVertexAttribPointer( myShaders.m_colorAttribute, 3, GL_FLOAT, 
-			GL_FALSE, sizeof( Vertex ), ptr+3 );
-	}*/
+		glUniform1i(myShaders.textureUniform, textureUnit);
+	}
 
 	glDrawElements( GL_TRIANGLES, nIndexes, GL_UNSIGNED_SHORT, 0 );
 
@@ -142,8 +176,6 @@ void Draw(ESContext *esContext)
 
 void Update ( ESContext *esContext, float deltaTime )
 {
-	//m_time += 0.0015;
-	//matrix.SetRotationZ( m_time );
 }
 
 void Key ( ESContext *esContext, unsigned char key, bool bIsPressed)
@@ -153,8 +185,7 @@ void Key ( ESContext *esContext, unsigned char key, bool bIsPressed)
 
 void CleanUp()
 {
-	glDeleteBuffers(1, &vboId);
-	glDeleteBuffers(1, &hIndexBuffer);
+	glDeleteBuffers(1, &hVertexBuffer);
 }
 
 int _tmain(int argc, _TCHAR* argv[])
